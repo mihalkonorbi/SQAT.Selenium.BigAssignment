@@ -9,10 +9,15 @@ public class CredentialsProvider {
 
     static {
         try {
-            FileInputStream fis = new FileInputStream("src/test/java/credentials.properties");
+            FileInputStream fis = new FileInputStream("src/test/java/test-credentials.properties");
             props.load(fis);
         } catch (IOException e) {
-            throw new RuntimeException("Could not load the credentials", e);
+            try {
+                FileInputStream fis = new FileInputStream("src/test/java/credentials.properties");
+                props.load(fis);
+            } catch (IOException ex) {
+                throw new RuntimeException("Could not load the credentials", ex);
+            }
         }
     }
 
