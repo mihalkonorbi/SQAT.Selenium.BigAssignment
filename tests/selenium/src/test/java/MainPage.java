@@ -9,8 +9,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By.ById;
 
 public class MainPage extends BasePage {
-    private static final String BASE_URL = "https://odysee.com";
-    
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -25,7 +23,14 @@ public class MainPage extends BasePage {
 
     public LoginPage clickOnLoginButton() {
         WebElement loginButton = getLoginButton();
-        loginButton.click();
+        try {
+            loginButton.click();
+        } catch (Exception e) {
+            deleteAllCookies();
+            reloadCurrentPage();
+            loginButton = getLoginButton();
+            loginButton.click();
+        }
         return new LoginPage(driver);
     }
 
