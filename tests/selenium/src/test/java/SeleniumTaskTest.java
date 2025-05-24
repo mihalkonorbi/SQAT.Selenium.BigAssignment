@@ -15,6 +15,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -127,6 +129,25 @@ public class SeleniumTaskTest {
                 Assert.assertNotNull(webElement);
             });
         });
+    }
+
+    @Test
+    public void historyTest() {
+        BasePage basePage = new BasePage(driver);
+        basePage.get(BasePage.BASE_URL);
+        Stack<String> urls = new Stack<>();
+        Stream.of("/$/explore", "/$/featured", "/$/popculture", "/$/artists", "/$/education", "/$/lifestyle",
+        "/$/spooky", "/$/gaming", "/$/tech", "/$/comedy", "/$/music", "/$/sports", "/$/universe", "/$/finance",
+        "/$/spirituality", "/$/news").forEach(urlPath -> {
+            String url = BasePage.BASE_URL + urlPath;
+            basePage.get(url);
+            urls.push(url);
+        });
+        basePage.get(BasePage.BASE_URL);
+        while (!urls.isEmpty()) {
+            basePage.goBack();
+            Assert.assertEquals(urls.pop(), basePage.getCurrentUrl());
+        }
     }
 
     private MainPage createNewMainPage() {

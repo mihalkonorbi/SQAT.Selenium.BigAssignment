@@ -76,6 +76,10 @@ public class BasePage {
         driver.manage().addCookie(cookie);
     }
 
+    public void goBack() {
+        driver.navigate().back();
+    }
+
     protected void sleepForCheck(long time) {
         try {
             Thread.sleep(time);
