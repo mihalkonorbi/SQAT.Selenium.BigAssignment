@@ -23,13 +23,15 @@ public class MainPage extends BasePage {
 
     public LoginPage clickOnLoginButton() {
         WebElement loginButton = getLoginButton();
-        try {
-            loginButton.click();
-        } catch (Exception e) {
-            deleteAllCookies();
-            reloadCurrentPage();
-            loginButton = getLoginButton();
-            loginButton.click();
+        for (int i = 0; i < 10; i++) {
+            try {
+                loginButton.click();
+                break;
+            } catch (Exception e) {
+                deleteAllCookies();
+                reloadCurrentPage();
+                loginButton = getLoginButton();
+            }
         }
         return new LoginPage(driver);
     }

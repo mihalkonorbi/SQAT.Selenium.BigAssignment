@@ -5,11 +5,16 @@ import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.*;
 
+import src.test.java.BasePage;
 import src.test.java.CredentialsProvider;
 import src.test.java.LoggedInPage;
 import src.test.java.MainPage;
+import src.test.java.StaticPageEntity;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -19,6 +24,21 @@ import org.junit.*;
 public class SeleniumTaskTest {
     private RemoteWebDriver driver;
     private WebDriverWait wait;
+    private List<StaticPageEntity> staticPages = Arrays.asList(
+        new StaticPageEntity("/$/explore",  
+            By.xpath("//*[@id=\"main-content\"]/h1/label"),
+            By.xpath("//*[@id=\"main-content\"]/div/div/div/div/div[1]/div/div[1]"),
+            By.xpath("//*[@id=\"main-content\"]/div/div/div/div/div[1]/div/div[3]/div/div"),
+            By.xpath("//*[@id=\"navigation-button\"]")),
+        new StaticPageEntity("/$/settings",
+            By.xpath("//*[@id=\"language_select\"]"),
+            By.xpath("//*[@id=\"main-content\"]/section/div/div/div[2]/div[2]/div"),
+            By.xpath("//*[@id=\"homepage_select\"]"),
+            By.xpath("//*[@id=\"theme_select\"]"),
+            By.xpath("//*[@id=\"main-content\"]/section/div/div/div[4]/div[2]/fieldset-section[2]/div"),
+            By.xpath("//*[@id=\"app\"]/div/header/div/div[1]/button"),
+            By.xpath("//*[@id=\"app\"]/div/div[4]/div[1]/nav/div"))
+    );
 
     @Before
     public void setup() throws MalformedURLException {
@@ -95,6 +115,18 @@ public class SeleniumTaskTest {
         loggedInPage = settingsPage.clickOnSave();
         
         Assert.assertEquals("https://odysee.com/", loggedInPage.getCurrentUrl());
+    }
+
+    @Test
+    public void testStaticPages() {
+        BasePage basePage = new BasePage(driver);
+        staticPages.forEach(staticPage -> {
+            basePage.get(BasePage.BASE_URL + staticPage.getUrlPath());
+            staticPage.getByList().forEach(by -> {
+                WebElement webElement = basePage.waitAndReturnElement(by);
+                Assert.assertNotNull(webElement);
+            });
+        });
     }
 
     private MainPage createNewMainPage() {

@@ -24,6 +24,10 @@ public class BasePage {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, 10);
     }
+
+    public void get(String url) {
+        driver.get(url);
+    }
     
     protected WebElement waitAndReturnElement(By locator) {
         this.wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
